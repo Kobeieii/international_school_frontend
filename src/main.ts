@@ -17,7 +17,7 @@ app.use(PrimeVue, {
   theme: {
     preset: PrimeVueCustomPreset,
     options: {
-      darkModeSelector: false,
+      darkModeSelector: '',
       cssLayer: {
         name: 'primevue',
         order: 'theme, base, primevue',

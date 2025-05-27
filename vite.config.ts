@@ -7,13 +7,13 @@ import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { defineConfig } from 'vite'
 import vueDevTools from 'vite-plugin-vue-devtools'
-// https://vite.dev/config/
+
 export default defineConfig({
   plugins: [
     vue(),
     vueDevTools(),
     AutoImport({
-      imports: ['vue', 'vue-router', 'pinia'],
+      imports: ['vue', 'vue-router', 'pinia', '@vueuse/core'],
       dirs: ['./src/configs', './src/stores'],
     }),
     tailwindcss(),

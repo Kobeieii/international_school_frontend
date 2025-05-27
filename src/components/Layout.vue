@@ -1,0 +1,114 @@
+<template>
+  <nav class=" bg-white w-full flex relative justify-between items-center mx-auto px-8 h-16">
+    <div>
+      <a href="/" class="flex items-center gap-4">
+        <div class="">
+          <img
+            src="@/assets/logo.svg"
+            alt="Logo"
+            class="h-8 w-auto"
+          >
+        </div>
+        <div>
+          <p class="text-xl font-medium text-gray-800 hidden md:block">
+            PDPA / International School
+          </p>
+        </div>
+
+      </a>
+    </div>
+
+    <div class="flex justify-end items-center relative">
+      <div class="relative">
+        <img
+          src="https://primefaces.org/cdn/primevue/images/avatar/amyelsner.png"
+          alt="Profile"
+          class="w-10 h-10 rounded-full cursor-pointer"
+          @click="toggleMenu"
+        >
+
+        <Menu
+          ref="menu"
+          :model="items"
+          :popup="true"
+        >
+          <template #item="{ item, props }">
+            <a v-ripple class="flex items-center" :href="item.to" v-bind="props.action">
+              <span :class="item.icon" />
+              <span>{{ item.label }}</span>
+            </a>
+          </template>
+        </Menu>
+      </div>
+    </div>
+  </nav>
+  <div class="grid grid-cols-5 gap-4 h-screen">
+    <div class="row-span-3">
+      <aside>
+        <div class="h-full mt-3 ml-4">
+          <ul class="p-4 space-y-4">
+            <li v-for="(item, index) in menuSideBar" :key="index">
+              <router-link :to="item.to" class="flex items-center gap-2 transition-colors hover:text-green-600" :class="{ 'text-green-600 font-medium': $route.path === item.to }">
+                <i :class="item.icon" />
+                <p>{{ item.label }}</p>
+              </router-link>
+            </li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+    <div class="row-span-3 col-span-4">
+      <router-view />
+    </div>
+  </div>
+</template>
+
+<script setup>
+import Menu from 'primevue/menu'
+import { ref } from 'vue'
+
+const menu = ref()
+const items = ref([
+  {
+    label: 'Logout',
+    icon: 'pi pi-sign-out',
+    to: '/login',
+  },
+])
+const menuSideBar = [
+  {
+    label: 'Data Mapping',
+    icon: 'pi pi-sitemap',
+    to: '/',
+  },
+  {
+    label: 'Governance Document',
+    icon: 'pi pi-building-columns',
+    to: '/students',
+  },
+  {
+    label: 'Employee Awareness',
+    icon: 'pi pi-user',
+    to: '/teachers',
+  },
+  {
+    label: 'Data Processors',
+    icon: 'pi pi-database',
+    to: '/classes',
+  },
+  {
+    label: 'Subject Access Request',
+    icon: 'pi pi-key',
+    to: '/classes',
+  },
+  {
+    label: 'Data breach register',
+    icon: 'pi pi-unlock',
+    to: '/classes',
+  },
+]
+
+function toggleMenu(event) {
+  menu.value.toggle(event)
+}
+</script>

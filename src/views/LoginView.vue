@@ -1,6 +1,6 @@
 <template>
   <div class="h-svh flex justify-center items-center">
-    <Card class="min-w-sm md:min-w-md p-2">
+    <Card class="min-w-xs md:min-w-md p-2">
       <template #header>
         <div class="pl-[20px] pt-[20px]">
           <img alt="user header" src="../assets/logo.svg">
@@ -37,8 +37,10 @@
 <script setup lang="ts">
 import { zodResolver } from '@primevue/forms/resolvers/zod'
 import { useToast } from 'primevue/usetoast'
+import { useRouter } from 'vue-router'
 import { z } from 'zod'
 
+const router = useRouter()
 const toast = useToast()
 const passwordComponent = ref()
 const initialValues = ref({
@@ -64,6 +66,7 @@ function focusPassword() {
 function onFormSubmit({ valid }) {
   if (valid) {
     toast.add({ severity: 'success', summary: 'Success', detail: 'Login successfully!', life: 3000 })
+    router.push({ name: 'home' })
   }
 }
 </script>
