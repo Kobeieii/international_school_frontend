@@ -1,37 +1,3 @@
-<script setup lang="ts">
-import { zodResolver } from '@primevue/forms/resolvers/zod'
-import { useToast } from 'primevue/usetoast'
-import { z } from 'zod'
-
-const toast = useToast()
-const passwordComponent = ref()
-const initialValues = ref({
-  email: '',
-  password: '',
-})
-const resolver = ref(zodResolver(
-  z.object({
-    email: z.string()
-      .email({ message: 'Invalid email address.' })
-      .min(1, { message: 'Email is required.' }),
-    password: z.string()
-      .min(6, { message: 'Password must be at least 6 characters long.' }),
-  }),
-))
-function focusPassword() {
-  nextTick(() => {
-    const input = passwordComponent.value?.$el?.querySelector('input')
-    input?.focus()
-  })
-}
-
-function onFormSubmit({ valid }) {
-  if (valid) {
-    toast.add({ severity: 'success', summary: 'Success', detail: 'Login successfully!', life: 3000 })
-  }
-}
-</script>
-
 <template>
   <div class="h-svh flex justify-center items-center">
     <Card class="min-w-sm md:min-w-md p-2">
@@ -67,3 +33,37 @@ function onFormSubmit({ valid }) {
     </Card>
   </div>
 </template>
+
+<script setup lang="ts">
+import { zodResolver } from '@primevue/forms/resolvers/zod'
+import { useToast } from 'primevue/usetoast'
+import { z } from 'zod'
+
+const toast = useToast()
+const passwordComponent = ref()
+const initialValues = ref({
+  email: '',
+  password: '',
+})
+const resolver = ref(zodResolver(
+  z.object({
+    email: z.string()
+      .email({ message: 'Invalid email address.' })
+      .min(1, { message: 'Email is required.' }),
+    password: z.string()
+      .min(6, { message: 'Password must be at least 6 characters long.' }),
+  }),
+))
+function focusPassword() {
+  nextTick(() => {
+    const input = passwordComponent.value?.$el?.querySelector('input')
+    input?.focus()
+  })
+}
+
+function onFormSubmit({ valid }) {
+  if (valid) {
+    toast.add({ severity: 'success', summary: 'Success', detail: 'Login successfully!', life: 3000 })
+  }
+}
+</script>
