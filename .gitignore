@@ -28,3 +28,7 @@ coverage
 *.sw?
 
 *.tsbuildinfo
+!.vscode/extensions.json
+!.vscode/settings.json
+auto-imports.d.ts
+components.d.ts
