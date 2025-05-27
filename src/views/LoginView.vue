@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { zodResolver } from '@primevue/forms/resolvers/zod'
+import { useToast } from 'primevue/usetoast'
 import { z } from 'zod'
 
+const toast = useToast()
 const passwordComponent = ref()
 const initialValues = ref({
   email: '',
@@ -21,6 +23,12 @@ function focusPassword() {
     const input = passwordComponent.value?.$el?.querySelector('input')
     input?.focus()
   })
+}
+
+function onFormSubmit({ valid }) {
+  if (valid) {
+    toast.add({ severity: 'success', summary: 'Success', detail: 'Login successfully!', life: 3000 })
+  }
 }
 </script>
 

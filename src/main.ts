@@ -2,6 +2,7 @@ import { definePreset } from '@primeuix/themes'
 import Aura from '@primeuix/themes/aura'
 import { createPinia } from 'pinia'
 import PrimeVue from 'primevue/config'
+import ToastService from 'primevue/toastservice'
 
 import { createApp } from 'vue'
 import App from './App.vue'
@@ -24,6 +25,7 @@ app.use(PrimeVue, {
     },
   },
 })
+app.use(ToastService);
 app.use(createPinia())
 app.use(router)
 
