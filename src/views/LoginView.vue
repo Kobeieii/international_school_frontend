@@ -63,7 +63,7 @@ function focusPassword() {
   })
 }
 
-function onFormSubmit({ valid }) {
+function onFormSubmit({ valid }: { valid: boolean }) {
   if (valid) {
     toast.add({ severity: 'success', summary: 'Success', detail: 'Login successfully!', life: 3000 })
     router.push({ name: 'home' })

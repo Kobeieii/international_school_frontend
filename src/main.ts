@@ -1,15 +1,17 @@
 import { definePreset } from '@primeuix/themes'
 import Aura from '@primeuix/themes/aura'
+import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community'
 import { createPinia } from 'pinia'
 import PrimeVue from 'primevue/config'
+
 import ToastService from 'primevue/toastservice'
-
 import { createApp } from 'vue'
-import App from './App.vue'
 
+import App from './App.vue'
 import router from './router'
 import '@/assets/styles.css'
 
+ModuleRegistry.registerModules([AllCommunityModule])
 const PrimeVueCustomPreset = definePreset(Aura, {})
 const app = createApp(App)
 
@@ -17,7 +19,6 @@ app.use(PrimeVue, {
   theme: {
     preset: PrimeVueCustomPreset,
     options: {
-      darkModeSelector: '',
       cssLayer: {
         name: 'primevue',
         order: 'theme, base, primevue',

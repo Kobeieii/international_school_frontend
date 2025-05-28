@@ -1,5 +1,5 @@
 <template>
-  <nav class=" bg-white w-full flex relative justify-between items-center mx-auto px-8 h-16">
+  <nav class=" bg-white dark:bg-black w-full flex relative justify-between items-center mx-auto px-8 h-16">
     <div>
       <a href="/" class="flex items-center gap-4">
         <div class="">
@@ -10,7 +10,7 @@
           >
         </div>
         <div>
-          <p class="text-xl font-medium text-gray-800 hidden md:block">
+          <p class="text-xl font-medium text-gray-800 dark:text-gray-200 hidden md:block">
             PDPA / International School
           </p>
         </div>
@@ -43,10 +43,10 @@
     </div>
   </nav>
   <div class="grid grid-cols-5 gap-4 h-screen">
-    <div class="row-span-3">
+    <div class="row-span-3 p-4 ml-4">
       <aside>
-        <div class="h-full mt-3 ml-4">
-          <ul class="p-4 space-y-4">
+        <div class="h-full">
+          <ul class="space-y-4">
             <li v-for="(item, index) in menuSideBar" :key="index">
               <router-link :to="item.to" class="flex items-center gap-2 transition-colors hover:text-green-600" :class="{ 'text-green-600 font-medium': $route.path === item.to }">
                 <i :class="item.icon" />
@@ -57,7 +57,7 @@
         </div>
       </aside>
     </div>
-    <div class="row-span-3 col-span-4">
+    <div class="row-span-3 col-span-4 p-4">
       <router-view />
     </div>
   </div>
