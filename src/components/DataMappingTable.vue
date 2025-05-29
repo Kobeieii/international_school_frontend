@@ -8,6 +8,7 @@
       minWidth: 150,
       resizable: true,
       sortable: true,
+      unSortIcon: true,
     }"
     :pagination="true"
     style="height: 480px"
@@ -17,18 +18,31 @@
 <script setup lang="ts">
 import { AgGridVue } from 'ag-grid-vue3'
 import { useAgridTheme } from '@/utils/aggrid'
+import DataMappingTableEditButton from './DataMappingTableEditButton.vue'
 
+const emit = defineEmits(['action'])
 const theme = useAgridTheme()
 const rowData = ref([
-  { title: 'Tesla', description: 'Model Y', departments: 64950, dataSubjectTypes: true },
-  { title: 'Ford', description: 'F-Series', departments: 33850, dataSubjectTypes: false },
-  { title: 'Toyota', description: 'Corolla', departments: 29600, dataSubjectTypeselectric: false },
+  { id: 1, title: 'Tesla', description: 'Model Y', department: 'test', dataSubjectTypes: 'test1,test2' },
+  { id: 2, title: 'Ford', description: 'F-Series', department: 'test', dataSubjectTypes: 'test1,test2' },
+  { id: 3, title: 'Toyota', description: 'Corolla', department: 'test', dataSubjectTypes: 'test1,test2' },
 ])
 
 const colDefs = ref([
   { field: 'title', headerName: 'Title' },
   { field: 'description', headerName: 'Description' },
-  { field: 'departments', headerName: 'Departments' },
+  { field: 'department', headerName: 'Department' },
   { field: 'dataSubjectTypes', headerName: 'Data Subject Types' },
+  {
+    field: 'actions',
+    cellRenderer: DataMappingTableEditButton,
+    cellRendererParams: (params: any) => ({
+      onEdit: () => emit('action', { action: 'edit', data: params.data }),
+      onDelete: () => emit('action', { action: 'delete', data: params.data }),
+    }),
+    maxWidth: 120,
+    headerName: '',
+    unSortIcon: false,
+  },
 ])
 </script>

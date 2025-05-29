@@ -4,13 +4,14 @@
       <Button v-for="btn in button" :key="btn.value" v-bind="btn" @click="handleClickBtn(btn.value)" />
     </div>
     <div class="my-5">
-      <DataMappingTable v-if="selectedBtn === 'edit'" />
+      <DataMappingTable v-if="selectedBtn === 'edit'" @action="(params) => emit('action', params)" />
       <Test v-else-if="selectedBtn === 'visualize'" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+const emit = defineEmits(['action'])
 const selectedBtn = ref('edit')
 const button = ref([{
   icon: 'pi pi-pencil',
