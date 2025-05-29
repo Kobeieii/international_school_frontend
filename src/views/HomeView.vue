@@ -8,7 +8,7 @@
     </div>
     <div class="col-span-3">
       <div class="flex justify-end gap-2">
-        <Button label="Filter" icon="pi pi-filter" class="bg-white text-gray-800 border-zinc-300" size="small" />
+        <Button label="Filter" icon="pi pi-filter" class="bg-white text-gray-800 border-zinc-300" size="small" @click="handleFilter" />
         <Button label="Export" icon="pi pi-upload" class="bg-white text-gray-800 border-zinc-300" size="small" />
         <Button label="Import" icon="pi pi-download" class="bg-white text-gray-800 border-zinc-300" size="small" />
         <Button label="New Data" icon="pi pi-plus" size="small" @click="handleAddData" />
@@ -41,10 +41,12 @@
   <Drawer v-model:visible="visibleDrawer" :show-close-icon="false" position="right" class="!w-full md:!w-80 lg:!w-[28rem]">
     <template #container="{ closeCallback }">
       <FormData
+        v-if="['New Data', 'Edit Data'].includes(drawerHeader)"
         :header-name="drawerHeader"
         @cancel="closeCallback"
         @save="closeCallback"
       />
+      <FilterData v-else-if="drawerHeader === 'Filter Data'" />
     </template>
   </Drawer>
   <DataMappingDeleteDialog v-model:visible="visibleDialog" />
@@ -77,6 +79,10 @@ function handleAction(params) {
 }
 function handleAddData() {
   drawerHeader.value = 'New Data'
+  visibleDrawer.value = true
+}
+function handleFilter() {
+  drawerHeader.value = 'Filter Data'
   visibleDrawer.value = true
 }
 </script>
