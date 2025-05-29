@@ -1,13 +1,13 @@
 <template>
-  <BreadcrumbCustom :home="home" :items="items" class="mb-2" />
+  <BreadcrumbCustom :home="home" :items="items" class="mb-3" />
   <div class="grid grid-cols-4 gap3 items-center">
-    <div>
+    <div class="col-span-4 lg:col-span-1">
       <p class="text-2xl font-semibold">
         Data Mapping
       </p>
     </div>
-    <div class="col-span-3">
-      <div class="flex justify-end gap-2">
+    <div class="col-span-4 lg:col-span-3 mt-3 lg:mt-0">
+      <div class="flex lg:justify-end gap-2">
         <Button label="Filter" icon="pi pi-filter" class="bg-white text-gray-800 border-zinc-300" size="small" @click="handleFilter" />
         <Button label="Export" icon="pi pi-upload" class="bg-white text-gray-800 border-zinc-300" size="small" />
         <Button label="Import" icon="pi pi-download" class="bg-white text-gray-800 border-zinc-300" size="small" />

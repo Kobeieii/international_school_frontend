@@ -42,8 +42,26 @@
       </div>
     </div>
   </nav>
+
+  <div class="lg:hidden w-full overflow-x-auto shadow p-2">
+    <div class="flex space-x-4 min-w-max">
+      <ul>
+        <li
+          v-for="(item, index) in menuSideBar"
+          :key="index"
+          class="inline-block px-4 py-2 cursor-pointer whitespace-nowrap rounded-lg transition-colors"
+        >
+          <router-link :to="item.to" class="flex items-center gap-2 transition-colors hover:text-green-600" :class="{ 'text-green-600 font-medium': $route.path === item.to }">
+            <i :class="item.icon" />
+            <p>{{ item.label }}</p>
+          </router-link>
+        </li>
+      </ul>
+    </div>
+  </div>
+
   <div class="grid grid-cols-5 gap-4 h-screen">
-    <div class="row-span-3 p-4 ml-4">
+    <div class="row-span-3 p-4 ml-4 hidden lg:block">
       <aside>
         <div class="h-full">
           <ul class="space-y-4">
@@ -57,7 +75,7 @@
         </div>
       </aside>
     </div>
-    <div class="row-span-3 col-span-4 p-4">
+    <div class="row-span-3 col-span-5 lg:col-span-4 p-4">
       <router-view />
     </div>
   </div>
@@ -112,3 +130,10 @@ function toggleMenu(event) {
   menu.value.toggle(event)
 }
 </script>
+
+<style scoped>
+/* Optional: Hide scrollbar for a cleaner look */
+::-webkit-scrollbar {
+  display: none;
+}
+</style>
