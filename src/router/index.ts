@@ -15,6 +15,14 @@ const router = createRouter({
             title: 'InterSchool - Home',
           },
         },
+        {
+          path: 'test/:tab(\\w+)/',
+          name: 'test',
+          component: () => import('@/components/Test.vue'),
+          meta: {
+            title: 'InterSchool - Test',
+          },
+        }
       ],
     },
     {

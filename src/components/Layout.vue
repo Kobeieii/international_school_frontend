@@ -102,27 +102,27 @@ const menuSideBar = [
   {
     label: 'Governance Document',
     icon: 'pi pi-building-columns',
-    to: '/students',
+    to: '/test/governance',
   },
   {
     label: 'Employee Awareness',
     icon: 'pi pi-user',
-    to: '/teachers',
+    to: '/test/employee',
   },
   {
     label: 'Data Processors',
     icon: 'pi pi-database',
-    to: '/classes',
+    to: '/test/data',
   },
   {
     label: 'Subject Access Request',
     icon: 'pi pi-key',
-    to: '/classes',
+    to: '/test/access',
   },
   {
     label: 'Data breach register',
     icon: 'pi pi-unlock',
-    to: '/classes',
+    to: '/test/dataregister',
   },
 ]
 
