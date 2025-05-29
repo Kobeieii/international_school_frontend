@@ -38,7 +38,7 @@
     </Tabs>
   </div>
 
-  <Drawer v-model:visible="visibleDrawer" :show-close-icon="false" position="right" class="!w-full md:!w-80 lg:!w-[28rem]">
+  <Drawer v-model:visible="visibleDrawer" :show-close-icon="false" :position="sidebarPosition" class="!h-[42rem] md:!h-full !w-full md:!w-80 lg:!w-[28rem]">
     <template #container="{ closeCallback }">
       <FormData
         v-if="['New Data', 'Edit Data'].includes(drawerHeader)"
@@ -85,4 +85,17 @@ function handleFilter() {
   drawerHeader.value = 'Filter Data'
   visibleDrawer.value = true
 }
+
+const width = ref(window.innerWidth)
+function updateWidth() {
+  width.value = window.innerWidth
+}
+onMounted(() => {
+  window.addEventListener('resize', updateWidth)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', updateWidth)
+})
+const sidebarPosition = computed(() => (width.value < 768 ? 'bottom' : 'right'))
 </script>
