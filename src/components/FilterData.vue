@@ -25,16 +25,16 @@
     <div class="flex flex-col gap-8 my-6">
       <div class="flex flex-col gap-3">
         <p class="mb-2">Department</p>
-        <div v-for="department in departments" :key="department" class="flex items-center gap-3">
-          <RadioButton v-model="selectDepartment" :input-id="department" :value="department" />
-          <label :for="department">{{ department }}</label>
+        <div v-for="department in departments" :key="department.id" class="flex items-center gap-3">
+          <RadioButton v-model="selectDepartment" :input-id="`d-${department.id.toString()}`" :value="department" />
+          <label :for="`d-${department.id.toString()}`">{{ department.name }}</label>
         </div>
       </div>
       <div class="flex flex-col gap-3">
         <p class="mb-2">Data Subject Types</p>
-        <div v-for="subject in dataSubjects" :key="subject" class="flex items-center gap-3">
-          <Checkbox v-model="selectDataSubjects" :input-id="subject" :value="subject" />
-          <label :for="subject">{{ subject }}</label>
+        <div v-for="subject in dataSubjectTypes" :key="subject.id" class="flex items-center gap-3">
+          <Checkbox v-model="selectDataSubjects" :input-id="`s-${subject.id.toString()}`" :value="subject" />
+          <label :for="`s-${subject.id.toString()}`">{{ subject.name }}</label>
         </div>
       </div>
     </div>
@@ -42,9 +42,10 @@
 </template>
 
 <script setup lang="ts">
-const departments = ['Human Resources', 'IT/IS', 'Admission', 'Marketing']
-const dataSubjects = ['Employee', 'Faculty Staff', 'Students']
+import { useDataMappingStore } from '@/stores/dataMapping'
 
+const dataMappingStore = useDataMappingStore()
+const { departments, dataSubjectTypes } = storeToRefs(dataMappingStore)
 const selectDepartment = ref('')
 const selectDataSubjects = ref([])
 
