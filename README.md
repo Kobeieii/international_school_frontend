@@ -87,3 +87,16 @@ src/
 └── main.js         # App entry point
 ```
 
+---
+
+## 👥 User Roles
+
+This project includes different user roles for testing and demonstration purposes:
+
+| Role                 | Email                            | Password     |
+| -------------------- | -------------------------------- | ------------ |
+| Admin                | `admin@email.com`                | `admin`      |
+| Editor               | `editor@email.com`               | `admin`      |
+| Viewer               | `viewer@email.com`               | `admin`      |
+| Viewer Data Mapping  | `viewer_data_mapping@email.com`  | `admin`      |
+| Editor Data Mapping  | `editor_data_mapping@email.com`  | `admin`      |
