@@ -10,6 +10,7 @@ export const useAuthStore = defineStore('auth', () => {
     token.value.access = access
     token.value.refresh = refresh
   }
+
   function clearToken() {
     token.value.access = ''
     token.value.refresh = ''
@@ -26,6 +27,7 @@ export const useAuthStore = defineStore('auth', () => {
   function isHasToken() {
     return token.value.access !== '' && token.value.refresh !== ''
   }
+
   async function me() {
     try {
       const userData = await Auth.me()
@@ -37,5 +39,10 @@ export const useAuthStore = defineStore('auth', () => {
       Object.assign(user, Auth.getInitMeData())
     }
   }
-  return { token, setToken, clearToken, login, isHasToken, me }
+
+  function hasPermission(permission: string): boolean {
+    return user.permissions?.includes(permission) || false
+  }
+
+  return { token, user, setToken, clearToken, login, isHasToken, me, hasPermission }
 })

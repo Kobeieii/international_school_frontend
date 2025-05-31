@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -13,6 +14,7 @@ const router = createRouter({
           component: () => import('@/views/HomeView.vue'),
           meta: {
             title: 'InterSchool - Home',
+            requiredPermission: 'view_data_mapping',
           },
         },
         {
@@ -21,8 +23,17 @@ const router = createRouter({
           component: () => import('@/components/Test.vue'),
           meta: {
             title: 'InterSchool - Test',
+            requiredPermission: 'view_governance_document',
           },
-        }
+        },
+        {
+          path: 'unauthorized',
+          name: 'unauthorized',
+          component: () => import('@/views/UnauthorizedView.vue'),
+          meta: {
+            title: 'InterSchool - Unauthorized',
+          },
+        },
       ],
     },
     {
@@ -45,6 +56,13 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  const authStore = useAuthStore()
+  const required = to.meta.requiredPermission as string | undefined
+  if (required && !authStore.hasPermission(required)) {
+    next({ name: 'unauthorized' })
+    return
+  }
+
   if (typeof to.meta.title === 'string') {
     document.title = to.meta.title
   }

@@ -44,10 +44,10 @@ async function initializeApp() {
   })
   app.use(ToastService)
   app.use(createPinia())
-  app.use(router)
 
   setupAxios()
   await initialPrep()
+  app.use(router)
 
   app.mount('#app')
 }
