@@ -53,9 +53,6 @@
 </template>
 
 <script setup>
-import { useDataMappingStore } from '@/stores/dataMapping'
-
-const dataMappingStore = useDataMappingStore()
 const initTab = ref('data-mapping')
 const visibleDrawer = ref(false)
 const visibleDialog = ref(false)
@@ -92,7 +89,6 @@ function updateWidth() {
 }
 onMounted(() => {
   window.addEventListener('resize', updateWidth)
-  dataMappingStore.getTitles()
 })
 
 onBeforeUnmount(() => {

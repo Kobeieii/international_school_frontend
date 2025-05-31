@@ -60,9 +60,13 @@ export class Departments {
 }
 
 export class Titles {
-  static async getList(): Promise<Pagination<TitleData> | null> {
+  static async getList(filter: any): Promise<Pagination<TitleData> | null> {
     try {
-      const response = await axios.get(`${baseURL}/titles/`)
+    const params: Record<string, any> = {
+      page: filter.page || 1,
+      page_size: filter.page_size || 100,  
+    }
+      const response = await axios.get(`${baseURL}/titles/`, { params })
       return response.data
     }
     catch (error) {

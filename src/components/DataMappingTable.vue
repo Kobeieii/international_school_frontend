@@ -10,9 +10,16 @@
       sortable: true,
       unSortIcon: true,
     }"
-    :pagination="true"
     :loading="isLoading.titles"
     style="height: 480px"
+  />
+  <Paginator
+    v-model:first="first"
+    :rows="rows"
+    :total-records="totalTitles" 
+    :rows-per-page-options="[20, 50, 100]"
+    @page="onPageChange"
+    :pt:root:class="'bg-transparent'"
   />
 </template>
 
@@ -26,9 +33,12 @@ import DataMappingTableEditButton from './DataMappingTableEditButton.vue'
 const emit = defineEmits(['action'])
 
 const dataMappingStore = useDataMappingStore()
-const { titles, isLoading } = storeToRefs(dataMappingStore)
+const { titles, isLoading, totalTitles } = storeToRefs(dataMappingStore)
 const theme = useAgridTheme()
 
+const first = ref(0)
+const rows = ref(20)
+const page = computed(() => Math.floor(first.value / rows.value) + 1)
 const colDefs = ref([
   { field: 'name', headerName: 'Title' },
   { field: 'description', headerName: 'Description' },
@@ -54,4 +64,20 @@ const colDefs = ref([
     unSortIcon: false,
   },
 ])
+
+function onPageChange(event: { first: number, rows: number }) {
+  first.value = event.first
+  rows.value = event.rows
+  dataMappingStore.getTitles({
+    page: page.value,
+    page_size: rows.value,
+  })
+}
+
+onMounted(() => {
+  dataMappingStore.getTitles({
+    page: page.value,
+    page_size: rows.value,
+  })
+})
 </script>
