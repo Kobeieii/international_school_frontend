@@ -48,7 +48,13 @@ export function setupAxios() {
 
         isRefreshing = true
         try {
-          const res = await axios.post('/auth/refresh/', {
+          const api = axios.create({
+            baseURL: `${import.meta.env.VITE_BASE_API}/api`,
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
+          const res = await api.post('/auth/refresh/', {
             refresh: authStore.token.refresh,
           })
 
@@ -63,8 +69,7 @@ export function setupAxios() {
         catch (refreshErr) {
           processQueue(refreshErr, null)
           authStore.clearToken()
-          const router = useRouter()
-          router.push('/login')
+          window.location.href = '/login'
           return Promise.reject(refreshErr)
         }
         finally {
