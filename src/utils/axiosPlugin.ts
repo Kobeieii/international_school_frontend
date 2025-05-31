@@ -34,7 +34,7 @@ export function setupAxios() {
       const originalRequest = err.config
       const authStore = useAuthStore()
 
-      if (err.response?.status === 401 && err.response?.data?.code === 'token_not_valid' && !originalRequest._retry) {
+      if (err.response?.status === 401 && !originalRequest._retry) {
         originalRequest._retry = true
 
         if (isRefreshing) {
@@ -67,6 +67,7 @@ export function setupAxios() {
           return axios(originalRequest)
         }
         catch (refreshErr) {
+          console.error('Token refresh failed:', refreshErr)
           processQueue(refreshErr, null)
           authStore.clearToken()
           window.location.href = '/login'

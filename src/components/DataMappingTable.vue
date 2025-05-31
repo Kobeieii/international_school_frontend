@@ -1,7 +1,7 @@
 <template>
   <AgGridVue
     :theme="theme"
-    :row-data="rowData"
+    :row-data="titles"
     :column-defs="colDefs"
     :default-col-def="{
       flex: 1,
@@ -11,28 +11,37 @@
       unSortIcon: true,
     }"
     :pagination="true"
+    :loading="isLoading.titles"
     style="height: 480px"
   />
 </template>
 
 <script setup lang="ts">
+import type { DataSubjectTypesData, DepartmentData } from '@/models/dataMapping'
 import { AgGridVue } from 'ag-grid-vue3'
+import { useDataMappingStore } from '@/stores/dataMapping'
 import { useAgridTheme } from '@/utils/aggrid'
 import DataMappingTableEditButton from './DataMappingTableEditButton.vue'
 
 const emit = defineEmits(['action'])
+
+const dataMappingStore = useDataMappingStore()
+const { titles, isLoading } = storeToRefs(dataMappingStore)
 const theme = useAgridTheme()
-const rowData = ref([
-  { id: 1, title: 'Tesla', description: 'Model Y', department: 'test', dataSubjectTypes: 'test1,test2' },
-  { id: 2, title: 'Ford', description: 'F-Series', department: 'test', dataSubjectTypes: 'test1,test2' },
-  { id: 3, title: 'Toyota', description: 'Corolla', department: 'test', dataSubjectTypes: 'test1,test2' },
-])
 
 const colDefs = ref([
-  { field: 'title', headerName: 'Title' },
+  { field: 'name', headerName: 'Title' },
   { field: 'description', headerName: 'Description' },
-  { field: 'department', headerName: 'Department' },
-  { field: 'dataSubjectTypes', headerName: 'Data Subject Types' },
+  {
+    field: 'department',
+    headerName: 'Department',
+    valueFormatter: (params: { value: DepartmentData }) => params.value.name,
+  },
+  {
+    field: 'data_subject_types',
+    headerName: 'Data Subject Types',
+    valueFormatter: (params: { value: DataSubjectTypesData[] }) => params.value.map(item => item.name).join(', '),
+  },
   {
     field: 'actions',
     cellRenderer: DataMappingTableEditButton,
