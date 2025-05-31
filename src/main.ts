@@ -7,6 +7,7 @@ import PrimeVue from 'primevue/config'
 import ToastService from 'primevue/toastservice'
 import { createApp } from 'vue'
 
+import { setupAxios } from '@/utils/axiosPlugin'
 import App from './App.vue'
 import router from './router'
 import '@/assets/styles.css'
@@ -29,5 +30,7 @@ app.use(PrimeVue, {
 app.use(ToastService)
 app.use(createPinia())
 app.use(router)
+
+setupAxios()
 
 app.mount('#app')

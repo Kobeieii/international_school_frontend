@@ -1,0 +1,78 @@
+import axios from 'axios'
+import { useAuthStore } from '@/stores/auth'
+
+let isRefreshing = false
+let failedQueue: any[] = []
+const router = useRouter()
+
+const processQueue = (error: any, token: string | null = null) => {
+  failedQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error)
+    }
+    else {
+      prom.resolve(token)
+    }
+  })
+  failedQueue = []
+}
+
+export function setupAxios() {
+  axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL
+  axios.defaults.headers.common['Content-Type'] = 'application/json'
+
+  axios.interceptors.request.use((config) => {
+    const authStore = useAuthStore()
+    if (authStore.token.access && config.headers) {
+      config.headers.Authorization = `Bearer ${authStore.token.access}`
+    }
+    return config
+  })
+
+  axios.interceptors.response.use(
+    res => res,
+    async (err) => {
+      const originalRequest = err.config
+      const authStore = useAuthStore()
+
+      if (err.response?.status === 401 && !originalRequest._retry) {
+        originalRequest._retry = true
+
+        if (isRefreshing) {
+          return new Promise((resolve, reject) => {
+            failedQueue.push({ resolve, reject })
+          }).then((token) => {
+            originalRequest.headers.Authorization = `Bearer ${token}`
+            return axios(originalRequest)
+          })
+        }
+
+        isRefreshing = true
+        try {
+          const res = await axios.post('/auth/refresh/', {
+            refresh_token: authStore.token.refresh,
+          })
+
+          const newAccess = res.data.access_token
+          const newRefresh = res.data.refresh_token
+          authStore.setToken(newAccess, newRefresh)
+          processQueue(null, newAccess)
+
+          originalRequest.headers.Authorization = `Bearer ${newAccess}`
+          return axios(originalRequest)
+        }
+        catch (refreshErr) {
+          processQueue(refreshErr, null)
+          authStore.clearToken()
+          router.push('/login')
+          return Promise.reject(refreshErr)
+        }
+        finally {
+          isRefreshing = false
+        }
+      }
+
+      return Promise.reject(err)
+    },
+  )
+}
