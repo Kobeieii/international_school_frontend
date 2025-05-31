@@ -1,39 +1,89 @@
-# internation_scool
+# Vue 3 Project
 
-This template should help get you started developing with Vue 3 in Vite.
+This is a web application built with [Vue 3](https://vuejs.org/) and [Vite](https://vitejs.dev/), providing a fast and modern front-end development experience.
 
-## Recommended IDE Setup
+## 🛠️ Tech Stack
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+* [Vue 3](https://vuejs.org/)
+* [Vite](https://vitejs.dev/)
+* [Pinia](https://pinia.vuejs.org/)
+* [Vue Router](https://router.vuejs.org/)
+* [TypeScript](https://www.typescriptlang.org/)
 
-## Type Support for `.vue` Imports in TS
+---
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+## 📦 Project Setup
 
-## Customize configuration
+Install dependencies:
 
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
+```bash
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+Or if you're using Yarn:
 
-```sh
+```bash
+yarn install
+```
+
+---
+
+## 🧪 Development Server
+
+Start the dev server:
+
+```bash
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+This will run the app at [http://localhost:5173](http://localhost:5173) by default.
 
-```sh
+---
+
+## 🏗️ Build for Production
+
+```bash
 npm run build
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+The output will be in the `dist/` folder.
 
-```sh
+---
+
+## 🧪 Preview Production Build
+
+```bash
+npm run preview
+```
+
+This will locally serve the built app.
+
+---
+
+## 🧹 Linting
+
+```bash
 npm run lint
 ```
+
+---
+
+## 🔧 Customize Configuration
+
+See [Vite Configuration Reference](https://vitejs.dev/config/) and [Vue 3 Documentation](https://vuejs.org/guide/).
+
+---
+
+## 📁 Project Structure
+
+```text
+src/
+├── assets/         # Static assets
+├── components/     # Reusable components
+├── views/          # Page-level components
+├── router/         # Vue Router setup
+├── store/          # Pinia stores (if using Pinia)
+├── App.vue         # Root component
+└── main.js         # App entry point
+```
+
