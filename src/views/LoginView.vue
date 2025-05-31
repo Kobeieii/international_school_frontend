@@ -27,7 +27,7 @@
               {{ $form.password.error?.message }}
             </Message>
           </div>
-          <Button type="submit" severity="primary" label="Submit" />
+          <Button type="submit" severity="primary" label="Submit" :loading="isLoading" />
         </Form>
       </template>
     </Card>
@@ -35,15 +35,19 @@
 </template>
 
 <script setup lang="ts">
+import type { LoginData } from '@/models/auth'
 import { zodResolver } from '@primevue/forms/resolvers/zod'
 import { useToast } from 'primevue/usetoast'
 import { useRouter } from 'vue-router'
 import { z } from 'zod'
+import { useAuthStore } from '@/stores/auth'
 
+const authStore = useAuthStore()
 const router = useRouter()
 const toast = useToast()
 const passwordComponent = ref()
-const initialValues = ref({
+const isLoading = ref(false)
+const initialValues = ref<LoginData>({
   email: '',
   password: '',
 })
@@ -53,7 +57,7 @@ const resolver = ref(zodResolver(
       .email({ message: 'Invalid email address.' })
       .min(1, { message: 'Email is required.' }),
     password: z.string()
-      .min(6, { message: 'Password must be at least 6 characters long.' }),
+      .min(1, { message: 'Password must be at least 6 characters long.' }),
   }),
 ))
 function focusPassword() {
@@ -63,10 +67,19 @@ function focusPassword() {
   })
 }
 
-function onFormSubmit({ valid }: { valid: boolean }) {
+async function onFormSubmit({ valid, values }: { valid: boolean, values: LoginData }) {
+  isLoading.value = true
   if (valid) {
-    toast.add({ severity: 'success', summary: 'Success', detail: 'Login successfully!', life: 3000 })
-    router.push({ name: 'home' })
+    const token = await authStore.login(values.email, values.password)
+    if (token) {
+      await authStore.me()
+      toast.add({ severity: 'success', summary: 'Success', detail: 'Login successfully!', life: 2000 })
+      router.push({ name: 'home' })
+    }
+    else {
+      toast.add({ severity: 'error', summary: 'Error', detail: 'Login failed. Please check your credentials.', life: 2000 })
+    }
   }
+  isLoading.value = false
 }
 </script>

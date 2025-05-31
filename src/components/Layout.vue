@@ -33,7 +33,7 @@
           :popup="true"
         >
           <template #item="{ item, props }">
-            <a v-ripple class="flex items-center" :href="item.to" v-bind="props.action">
+            <a v-ripple class="flex items-center" :href="item.to" v-bind="props.action" @click="handleClickMenu(item.to)">
               <span :class="item.icon" />
               <span>{{ item.label }}</span>
             </a>
@@ -84,6 +84,7 @@
 <script setup>
 import Menu from 'primevue/menu'
 import { ref } from 'vue'
+import { useAuthStore } from '@/stores/auth'
 
 const menu = ref()
 const items = ref([
@@ -129,10 +130,15 @@ const menuSideBar = [
 function toggleMenu(event) {
   menu.value.toggle(event)
 }
+function handleClickMenu(to) {
+  const authStore = useAuthStore()
+  if (to === '/login') {
+    authStore.clearToken()
+  }
+}
 </script>
 
 <style scoped>
-/* Optional: Hide scrollbar for a cleaner look */
 ::-webkit-scrollbar {
   display: none;
 }

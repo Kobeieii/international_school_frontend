@@ -3,7 +3,6 @@ import { useAuthStore } from '@/stores/auth'
 
 let isRefreshing = false
 let failedQueue: any[] = []
-const router = useRouter()
 
 const processQueue = (error: any, token: string | null = null) => {
   failedQueue.forEach((prom) => {
@@ -18,7 +17,7 @@ const processQueue = (error: any, token: string | null = null) => {
 }
 
 export function setupAxios() {
-  axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL
+  axios.defaults.baseURL = `${import.meta.env.VITE_BASE_API}/api`
   axios.defaults.headers.common['Content-Type'] = 'application/json'
 
   axios.interceptors.request.use((config) => {
@@ -35,7 +34,7 @@ export function setupAxios() {
       const originalRequest = err.config
       const authStore = useAuthStore()
 
-      if (err.response?.status === 401 && !originalRequest._retry) {
+      if (err.response?.status === 401 && err.response?.data?.code === 'token_not_valid' && !originalRequest._retry) {
         originalRequest._retry = true
 
         if (isRefreshing) {
@@ -50,11 +49,11 @@ export function setupAxios() {
         isRefreshing = true
         try {
           const res = await axios.post('/auth/refresh/', {
-            refresh_token: authStore.token.refresh,
+            refresh: authStore.token.refresh,
           })
 
-          const newAccess = res.data.access_token
-          const newRefresh = res.data.refresh_token
+          const newAccess = res.data.access
+          const newRefresh = res.data.refresh
           authStore.setToken(newAccess, newRefresh)
           processQueue(null, newAccess)
 
@@ -64,6 +63,7 @@ export function setupAxios() {
         catch (refreshErr) {
           processQueue(refreshErr, null)
           authStore.clearToken()
+          const router = useRouter()
           router.push('/login')
           return Promise.reject(refreshErr)
         }

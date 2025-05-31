@@ -7,6 +7,7 @@ import PrimeVue from 'primevue/config'
 import ToastService from 'primevue/toastservice'
 import { createApp } from 'vue'
 
+import { useAuthStore } from '@/stores/auth'
 import { setupAxios } from '@/utils/axiosPlugin'
 import App from './App.vue'
 import router from './router'
@@ -16,21 +17,39 @@ ModuleRegistry.registerModules([AllCommunityModule])
 const PrimeVueCustomPreset = definePreset(Aura, {})
 const app = createApp(App)
 
-app.use(PrimeVue, {
-  theme: {
-    preset: PrimeVueCustomPreset,
-    options: {
-      cssLayer: {
-        name: 'primevue',
-        order: 'theme, base, primevue',
+async function initialPrep() {
+  const authStore = useAuthStore()
+
+  if (authStore.isHasToken()) {
+    try {
+      await authStore.me()
+    }
+    catch (e) {
+      console.error(e)
+    }
+  }
+}
+
+async function initializeApp() {
+  app.use(PrimeVue, {
+    theme: {
+      preset: PrimeVueCustomPreset,
+      options: {
+        cssLayer: {
+          name: 'primevue',
+          order: 'theme, base, primevue',
+        },
       },
     },
-  },
-})
-app.use(ToastService)
-app.use(createPinia())
-app.use(router)
+  })
+  app.use(ToastService)
+  app.use(createPinia())
+  app.use(router)
 
-setupAxios()
+  setupAxios()
+  await initialPrep()
 
-app.mount('#app')
+  app.mount('#app')
+}
+
+initializeApp().catch(err => console.error('App initialization failed:', err))
