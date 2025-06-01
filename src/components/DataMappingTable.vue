@@ -18,7 +18,7 @@
     :rows="pagination.rows"
     :total-records="totalTitles"
     :rows-per-page-options="[20, 50, 100]"
-    pt:root:class="'bg-transparent'"
+    pt:root:class="bg-transparent"
     @page="onPageChange"
   />
 </template>

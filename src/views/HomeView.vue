@@ -43,22 +43,23 @@
       <FormData
         v-if="['New Data', 'Edit Data'].includes(drawerHeader)"
         :header-name="drawerHeader"
-        @cancel="closeCallback"
-        @save="closeCallback"
+        @close="closeCallback"
       />
       <FilterData v-else-if="drawerHeader === 'Filter Data'" />
     </template>
   </Drawer>
-  <DataMappingDeleteDialog v-model:visible="visibleDialog" />
+  <DataMappingDeleteDialog :id="idForDelete" v-model:visible="visibleDialog" />
 </template>
 
 <script setup>
 import { useDataMappingStore } from '@/stores/dataMapping'
 
 const dataMappingStore = useDataMappingStore()
+const { formData } = storeToRefs(dataMappingStore)
 const initTab = ref('data-mapping')
 const visibleDrawer = ref(false)
 const visibleDialog = ref(false)
+
 const drawerHeader = ref('')
 const home = ref({
   icon: 'pi pi-home',
@@ -67,13 +68,20 @@ const home = ref({
 const items = ref([
   { label: 'Current Page' },
 ])
+const idForDelete = ref(null)
 
 function handleAction(params) {
   if (params.action === 'edit') {
     drawerHeader.value = 'Edit Data'
+    formData.value.id = params.data.id
+    formData.value.title = params.data.name
+    formData.value.description = params.data.description
+    formData.value.department = params.data.department
+    formData.value.dataSubjectTypes = params.data.data_subject_types
     visibleDrawer.value = true
   }
   else if (params.action === 'delete') {
+    idForDelete.value = params.data.id
     visibleDialog.value = true
   }
 }

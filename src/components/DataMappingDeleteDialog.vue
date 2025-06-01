@@ -19,12 +19,27 @@
       </div>
       <div class="flex gap-4">
         <Button label="Cancel" severity="secondary" variant="outlined" size="small" class="w-24" @click="visible = false" />
-        <Button label="Delete" severity="danger" variant="filled" size="small" class="w-24" @click="visible = false" />
+        <Button label="Delete" severity="danger" variant="filled" size="small" class="w-24" :loading="isLoading.deleteTitle" @click="handleConfirm" />
       </div>
     </div>
   </Dialog>
 </template>
 
 <script setup lang="ts">
+import { useDataMappingStore } from '@/stores/dataMapping'
+
+const props = defineProps<{
+  id: number | null
+}>()
 const visible = defineModel<boolean>('visible', { default: false })
+const dataMappingStore = useDataMappingStore()
+const { isLoading } = storeToRefs(dataMappingStore)
+
+async function handleConfirm() {
+  if (props.id) {
+    await dataMappingStore.deleteTitle(props.id)
+    await dataMappingStore.getTitles()
+    visible.value = false
+  }
+}
 </script>

@@ -4,8 +4,8 @@
       {{ headerName }}
     </p>
     <div class="flex gap-3">
-      <Button label="Cancel" variant="text" severity="secondary" size="small" @click="emit('cancel')" />
-      <Button label="Save" severity="primary" size="small" type="submit" form="myForm" />
+      <Button label="Cancel" variant="text" severity="secondary" size="small" @click="emit('close')" />
+      <Button label="Save" severity="primary" size="small" type="submit" form="myForm" :loading="isLoading.saveForm" />
     </div>
   </DrawerHeader>
   <DrawerBody>
@@ -17,6 +17,7 @@
       class="flex flex-col gap-6"
       @submit="handleSave"
     >
+      <InputText id="id" name="id" type="hidden" />
       <div class="flex flex-col gap-1">
         <label for="title">Title</label>
         <InputText id="title" name="title" type="text" fluid />
@@ -59,16 +60,12 @@ import { z } from 'zod'
 import { useDataMappingStore } from '@/stores/dataMapping'
 
 defineProps(['headerName'])
-const emit = defineEmits(['cancel', 'save'])
+const emit = defineEmits(['close'])
 const dataMappingStore = useDataMappingStore()
-const { dataSubjectTypes, departments } = storeToRefs(dataMappingStore)
-const formData = reactive({
-  title: '',
-  description: '',
-  department: null,
-  dataSubjectTypes: [],
-})
+const { dataSubjectTypes, departments, formData, isLoading } = storeToRefs(dataMappingStore)
+
 const schema = z.object({
+  id: z.number().optional().nullable(),
   title: z.string().min(1),
   description: z.string().optional(),
   department: z.object({
@@ -88,9 +85,11 @@ const schema = z.object({
 })
 const resolver = zodResolver(schema)
 
-function handleSave(event: any) {
+async function handleSave(event: any) {
   if (event.valid) {
-    console.log('Form data:', event.values)
+    await dataMappingStore.saveFormData(event.values)
+    await dataMappingStore.getTitles()
+    emit('close')
   }
   else {
     console.error('Form validation failed:', event.errors)

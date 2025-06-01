@@ -76,9 +76,10 @@ export class Titles {
     }
   }
 
-  static async post(data: {
+  static async create(data: {
     name: string
-    department_id: number
+    description: string
+    department_id: number | null
     data_subject_types_ids: number[]
   }): Promise<TitleData | null> {
     try {
@@ -91,10 +92,11 @@ export class Titles {
     }
   }
 
-  static async put(id: number, data: {
-    name?: string
-    department_id?: number
-    data_subject_types_ids?: number[]
+  static async update(id: number, data: {
+    name: string
+    description: string
+    department_id: number | null
+    data_subject_types_ids: number[]
   }): Promise<TitleData | null> {
     try {
       const response = await axios.patch(`${baseURL}/titles/${id}/`, data)

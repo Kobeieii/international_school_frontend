@@ -9,6 +9,8 @@ export const useDataMappingStore = defineStore('dataMapping', () => {
   const totalTitles = ref(0)
   const isLoading = reactive({
     titles: false,
+    saveForm: false,
+    deleteTitle: false,
   })
   const pagination = reactive({
     first: 1,
@@ -22,6 +24,13 @@ export const useDataMappingStore = defineStore('dataMapping', () => {
   }>({
     search: '',
     departments: [],
+    dataSubjectTypes: [],
+  })
+  const formData = reactive<FormData>({
+    id: null,
+    title: '',
+    description: '',
+    department: null,
     dataSubjectTypes: [],
   })
 
@@ -64,6 +73,38 @@ export const useDataMappingStore = defineStore('dataMapping', () => {
     isLoading.titles = false
   }
 
+  async function saveFormData(formData: FormData) {
+    isLoading.saveForm = true
+    const payload = {
+      name: formData.title,
+      description: formData.description,
+      department_id: formData.department ? formData.department.id : null,
+      data_subject_types_ids: formData.dataSubjectTypes.map(type => type.id),
+    }
+    if (formData.id) {
+      await Titles.update(formData.id, payload)
+    }
+    else {
+      await Titles.create(payload)
+    }
+    resetFormData()
+    isLoading.saveForm = false
+  }
+
+  async function deleteTitle(id: number) {
+    isLoading.deleteTitle = true
+    await Titles.delete(id)
+    isLoading.deleteTitle = false
+  }
+
+  function resetFormData() {
+    formData.id = null
+    formData.title = ''
+    formData.description = ''
+    formData.department = null
+    formData.dataSubjectTypes = []
+  }
+
   return {
     dataSubjectTypes,
     departments,
@@ -73,8 +114,20 @@ export const useDataMappingStore = defineStore('dataMapping', () => {
     pagination,
     pagePagination,
     filterData,
+    formData,
     getDataSubjectTypes,
     getDepartments,
     getTitles,
+    saveFormData,
+    resetFormData,
+    deleteTitle,
   }
 })
+
+interface FormData {
+  id: number | null
+  title: string
+  description: string
+  department: DepartmentData | null
+  dataSubjectTypes: DataSubjectTypesData[]
+}
