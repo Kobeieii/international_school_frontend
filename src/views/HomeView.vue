@@ -9,7 +9,7 @@
     <div class="col-span-4 lg:col-span-3 mt-3 lg:mt-0">
       <div class="flex lg:justify-end gap-2">
         <Button label="Filter" icon="pi pi-filter" class="bg-white text-gray-800 border-zinc-300" size="small" @click="handleFilter" />
-        <Button label="Export" icon="pi pi-upload" class="bg-white text-gray-800 border-zinc-300" size="small" />
+        <Button label="Export" icon="pi pi-upload" class="bg-white text-gray-800 border-zinc-300" size="small" @click="exportExcel" :loading="isLoadingExportExcel"/>
         <Button label="Import" icon="pi pi-download" class="bg-white text-gray-800 border-zinc-300" size="small" />
         <Button label="New Data" icon="pi pi-plus" size="small" @click="handleAddData" />
       </div>
@@ -53,12 +53,16 @@
 
 <script setup>
 import { useDataMappingStore } from '@/stores/dataMapping'
+import { utils, writeFileXLSX } from 'xlsx';
+import { useToast } from 'primevue/usetoast';
 
 const dataMappingStore = useDataMappingStore()
 const { formData } = storeToRefs(dataMappingStore)
 const initTab = ref('data-mapping')
 const visibleDrawer = ref(false)
 const visibleDialog = ref(false)
+const isLoadingExportExcel = ref(false)
+const toast = useToast()
 
 const drawerHeader = ref('')
 const home = ref({
@@ -98,6 +102,23 @@ const width = ref(window.innerWidth)
 function updateWidth() {
   width.value = window.innerWidth
 }
+
+async function exportExcel() {
+  isLoadingExportExcel.value = true
+  const data = await dataMappingStore.exportExcel()
+  if (!data || data.length === 0) {
+    isLoadingExportExcel.value = false
+    toast.add({ severity: 'error', summary: 'No Data', detail: 'There is no data to export.', life: 3000 })
+    return
+  }
+  const worksheet = utils.json_to_sheet(data)
+  const workbook = utils.book_new()
+  utils.book_append_sheet(workbook, worksheet, 'Data Mapping')
+  
+  writeFileXLSX(workbook, 'data_mapping.xlsx')
+  isLoadingExportExcel.value = false
+}
+
 onMounted(() => {
   window.addEventListener('resize', updateWidth)
   dataMappingStore.getDataSubjectTypes()

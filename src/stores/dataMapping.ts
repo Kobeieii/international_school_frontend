@@ -102,6 +102,10 @@ export const useDataMappingStore = defineStore('dataMapping', () => {
     formData.dataSubjectTypes = []
   }
 
+  async function exportExcel(params: any) {
+    return await Titles.exportExcel(params)
+  }
+
   return {
     dataSubjectTypes,
     departments,
@@ -118,6 +122,7 @@ export const useDataMappingStore = defineStore('dataMapping', () => {
     saveFormData,
     resetFormData,
     deleteTitle,
+    exportExcel,
   }
 })
 

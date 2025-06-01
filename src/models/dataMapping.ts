@@ -121,12 +121,23 @@ export class Titles {
 
   static async importExcel(data: TitleExcelData[]): Promise<boolean> {
     try {
-      await axios.post(`${baseURL}/titles/import/`, data)
+      await axios.post(`${baseURL}/titles/import-excel/`, data)
       return true
     }
     catch (error) {
       console.error('Failed to import titles from Excel:', error)
       return false
+    }
+  }
+
+  static async exportExcel(filter: any): Promise<TitleExcelData[] | null> {
+    try {
+      const response = await axios.get(`${baseURL}/titles/export-excel/`, { params: filter })
+      return response.data
+    }
+    catch (error) {
+      console.error('Failed to export titles to Excel:', error)
+      return null
     }
   }
 }
