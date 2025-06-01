@@ -10,7 +10,6 @@
       <div class="flex lg:justify-end gap-2">
         <Button label="Filter" icon="pi pi-filter" class="bg-white text-gray-800 border-zinc-300" size="small" @click="handleFilter" />
         <Button label="Export" icon="pi pi-upload" class="bg-white text-gray-800 border-zinc-300" size="small" :loading="isLoadingExportExcel" @click="exportExcel" />
-        <!-- <Button label="Import" icon="pi pi-download" class="bg-white text-gray-800 border-zinc-300" size="small" /> -->
         <FileUpload
           ref="uploader"
           mode="basic"
@@ -22,10 +21,10 @@
           :auto="true"
           choose-label="Import"
           choose-icon="pi pi-download"
-          :disabled="disabledImportExcel"
+          :disabled="disabledImportExcel || !can('edit_data_mapping')"
           @select="onSelectExcel"
         />
-        <Button label="New Data" icon="pi pi-plus" size="small" @click="handleAddData" />
+        <Button label="New Data" icon="pi pi-plus" size="small" :disabled="!can('edit_data_mapping')" @click="handleAddData" />
       </div>
     </div>
   </div>
@@ -68,8 +67,10 @@
 <script setup>
 import { useToast } from 'primevue/usetoast'
 import { utils, writeFileXLSX } from 'xlsx'
+import { usePermission } from '@/composables/usePermission'
 import { useDataMappingStore } from '@/stores/dataMapping'
 
+const can = usePermission()
 const dataMappingStore = useDataMappingStore()
 const { formData } = storeToRefs(dataMappingStore)
 const initTab = ref('data-mapping')

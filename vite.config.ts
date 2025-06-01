@@ -18,7 +18,7 @@ export default defineConfig({
     }),
     tailwindcss(),
     Components({
-      dirs: ['./src/components', './src/layouts'],
+      dirs: ['./src/components', './src/composables'],
       resolvers: [PrimeVueResolver()],
     }),
   ],
