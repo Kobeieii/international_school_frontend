@@ -9,8 +9,22 @@
     <div class="col-span-4 lg:col-span-3 mt-3 lg:mt-0">
       <div class="flex lg:justify-end gap-2">
         <Button label="Filter" icon="pi pi-filter" class="bg-white text-gray-800 border-zinc-300" size="small" @click="handleFilter" />
-        <Button label="Export" icon="pi pi-upload" class="bg-white text-gray-800 border-zinc-300" size="small" @click="exportExcel" :loading="isLoadingExportExcel"/>
-        <Button label="Import" icon="pi pi-download" class="bg-white text-gray-800 border-zinc-300" size="small" />
+        <Button label="Export" icon="pi pi-upload" class="bg-white text-gray-800 border-zinc-300" size="small" :loading="isLoadingExportExcel" @click="exportExcel" />
+        <!-- <Button label="Import" icon="pi pi-download" class="bg-white text-gray-800 border-zinc-300" size="small" /> -->
+        <FileUpload
+          ref="uploader"
+          mode="basic"
+          name="excel"
+          accept=".xlsx, .xls, .csv"
+          :max-file-size="1000000"
+          class="bg-white text-gray-800 border-zinc-300"
+          :custom-upload="true"
+          :auto="true"
+          choose-label="Import"
+          choose-icon="pi pi-download"
+          @select="onSelectExcel"
+          :disabled="disabledImportExcel"
+        />
         <Button label="New Data" icon="pi pi-plus" size="small" @click="handleAddData" />
       </div>
     </div>
@@ -52,9 +66,9 @@
 </template>
 
 <script setup>
+import { useToast } from 'primevue/usetoast'
+import { utils, writeFileXLSX } from 'xlsx'
 import { useDataMappingStore } from '@/stores/dataMapping'
-import { utils, writeFileXLSX } from 'xlsx';
-import { useToast } from 'primevue/usetoast';
 
 const dataMappingStore = useDataMappingStore()
 const { formData } = storeToRefs(dataMappingStore)
@@ -62,6 +76,7 @@ const initTab = ref('data-mapping')
 const visibleDrawer = ref(false)
 const visibleDialog = ref(false)
 const isLoadingExportExcel = ref(false)
+const disabledImportExcel = ref(false)
 const toast = useToast()
 
 const drawerHeader = ref('')
@@ -73,6 +88,7 @@ const items = ref([
   { label: 'Current Page' },
 ])
 const idForDelete = ref(null)
+const uploader = ref(null)
 
 function handleAction(params) {
   if (params.action === 'edit') {
@@ -114,9 +130,42 @@ async function exportExcel() {
   const worksheet = utils.json_to_sheet(data)
   const workbook = utils.book_new()
   utils.book_append_sheet(workbook, worksheet, 'Data Mapping')
-  
+
   writeFileXLSX(workbook, 'data_mapping.xlsx')
   isLoadingExportExcel.value = false
+}
+
+async function onUploadExcel(event) {
+  const file = event.files[0]
+  if (!file) { return }
+
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    const data = new Uint8Array(e.target.result)
+    const workbook = XLSX.read(data, { type: 'array' })
+    const sheetName = workbook.SheetNames[0]
+    const worksheet = workbook.Sheets[sheetName]
+    const json = XLSX.utils.sheet_to_json(worksheet, { defval: '' })
+
+    console.log('Parsed Excel data:', json)
+  }
+  reader.readAsArrayBuffer(file)
+}
+
+async function onSelectExcel(event) {
+  disabledImportExcel.value = true
+  const file = event.files?.[0]
+  if (!file) { return }
+  const success = await dataMappingStore.importExcel(file)
+  if (success) {
+    toast.add({ severity: 'success', summary: 'Success', detail: 'Data imported successfully', life: 2000 })
+    await dataMappingStore.getTitles()
+  }
+  else {
+    toast.add({ severity: 'error', summary: 'Error', detail: 'Failed to import data', life: 2000 })
+  }
+  uploader.value.clear()
+  disabledImportExcel.value = false
 }
 
 onMounted(() => {

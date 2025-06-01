@@ -26,8 +26,8 @@
 </template>
 
 <script setup lang="ts">
-import { useDataMappingStore } from '@/stores/dataMapping'
 import { useToast } from 'primevue/usetoast'
+import { useDataMappingStore } from '@/stores/dataMapping'
 
 const props = defineProps<{
   id: number | null
@@ -42,7 +42,8 @@ async function handleConfirm() {
     const success = await dataMappingStore.deleteTitle(props.id)
     if (success) {
       toast.add({ severity: 'success', summary: 'Success', detail: 'Title deleted successfully', life: 2000 })
-    } else {
+    }
+    else {
       toast.add({ severity: 'error', summary: 'Error', detail: 'Failed to delete title', life: 2000 })
     }
     await dataMappingStore.getTitles()

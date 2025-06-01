@@ -1,5 +1,6 @@
-import type { DataSubjectTypesData, DepartmentData, TitleData } from '@/models/dataMapping'
+import type { DataSubjectTypesData, DepartmentData, TitleData, TitleExcelData } from '@/models/dataMapping'
 import { defineStore } from 'pinia'
+import * as XLSX from 'xlsx'
 import { DataSubjectTypes, Departments, Titles } from '@/models/dataMapping'
 
 export const useDataMappingStore = defineStore('dataMapping', () => {
@@ -106,6 +107,29 @@ export const useDataMappingStore = defineStore('dataMapping', () => {
     return await Titles.exportExcel(params)
   }
 
+  async function importExcel(file: File) {
+    const arrayBuffer = await readFileAsArrayBuffer(file)
+
+    const data = new Uint8Array(arrayBuffer)
+    const workbook = XLSX.read(data, { type: 'array' })
+    const sheetName = workbook.SheetNames[0]
+    const worksheet = workbook.Sheets[sheetName]
+    const json: TitleExcelData[] = XLSX.utils.sheet_to_json(worksheet, { defval: '' })
+    const success = await Titles.importExcel(json)
+    return success
+  }
+
+  function readFileAsArrayBuffer(file: File): Promise<ArrayBuffer> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader()
+
+      reader.onload = () => resolve(reader.result as ArrayBuffer)
+      reader.onerror = reject
+
+      reader.readAsArrayBuffer(file)
+    })
+  }
+
   return {
     dataSubjectTypes,
     departments,
@@ -123,6 +147,7 @@ export const useDataMappingStore = defineStore('dataMapping', () => {
     resetFormData,
     deleteTitle,
     exportExcel,
+    importExcel,
   }
 })
 
