@@ -81,20 +81,17 @@ export const useDataMappingStore = defineStore('dataMapping', () => {
       department_id: formData.department ? formData.department.id : null,
       data_subject_types_ids: formData.dataSubjectTypes.map(type => type.id),
     }
-    if (formData.id) {
-      await Titles.update(formData.id, payload)
-    }
-    else {
-      await Titles.create(payload)
-    }
+    const data = formData.id ? await Titles.update(formData.id, payload) : await Titles.create(payload)
     resetFormData()
     isLoading.saveForm = false
+    return data
   }
 
   async function deleteTitle(id: number) {
     isLoading.deleteTitle = true
-    await Titles.delete(id)
+    const data = await Titles.delete(id)
     isLoading.deleteTitle = false
+    return data
   }
 
   function resetFormData() {

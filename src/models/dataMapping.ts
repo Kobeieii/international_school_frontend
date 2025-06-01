@@ -108,12 +108,14 @@ export class Titles {
     }
   }
 
-  static async delete(id: number): Promise<void> {
+  static async delete(id: number): Promise<boolean> {
     try {
       await axios.delete(`${baseURL}/titles/${id}/`)
+      return true
     }
     catch (error) {
       console.error('Failed to delete title:', error)
+      return false
     }
   }
 

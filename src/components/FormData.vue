@@ -58,11 +58,13 @@ import Form from '@primevue/forms/form'
 import { zodResolver } from '@primevue/forms/resolvers/zod'
 import { z } from 'zod'
 import { useDataMappingStore } from '@/stores/dataMapping'
+import { useToast } from 'primevue/usetoast'
 
 defineProps(['headerName'])
 const emit = defineEmits(['close'])
 const dataMappingStore = useDataMappingStore()
 const { dataSubjectTypes, departments, formData, isLoading } = storeToRefs(dataMappingStore)
+const toast = useToast()
 
 const schema = z.object({
   id: z.number().optional().nullable(),
@@ -87,7 +89,12 @@ const resolver = zodResolver(schema)
 
 async function handleSave(event: any) {
   if (event.valid) {
-    await dataMappingStore.saveFormData(event.values)
+    const data = await dataMappingStore.saveFormData(event.values)
+    if (data) {
+      toast.add({ severity: 'success', summary: 'Success', detail: 'Data saved successfully', life: 2000 })
+    } else {
+      toast.add({ severity: 'error', summary: 'Error', detail: 'Failed to save data', life: 2000 })
+    }
     await dataMappingStore.getTitles()
     emit('close')
   }

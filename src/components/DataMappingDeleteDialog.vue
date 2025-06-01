@@ -27,6 +27,7 @@
 
 <script setup lang="ts">
 import { useDataMappingStore } from '@/stores/dataMapping'
+import { useToast } from 'primevue/usetoast'
 
 const props = defineProps<{
   id: number | null
@@ -34,10 +35,16 @@ const props = defineProps<{
 const visible = defineModel<boolean>('visible', { default: false })
 const dataMappingStore = useDataMappingStore()
 const { isLoading } = storeToRefs(dataMappingStore)
+const toast = useToast()
 
 async function handleConfirm() {
   if (props.id) {
-    await dataMappingStore.deleteTitle(props.id)
+    const success = await dataMappingStore.deleteTitle(props.id)
+    if (success) {
+      toast.add({ severity: 'success', summary: 'Success', detail: 'Title deleted successfully', life: 2000 })
+    } else {
+      toast.add({ severity: 'error', summary: 'Error', detail: 'Failed to delete title', life: 2000 })
+    }
     await dataMappingStore.getTitles()
     visible.value = false
   }
