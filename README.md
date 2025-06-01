@@ -4,11 +4,11 @@ This is a web application built with [Vue 3](https://vuejs.org/) and [Vite](http
 
 ## 🛠️ Tech Stack
 
-* [Vue 3](https://vuejs.org/)
-* [Vite](https://vitejs.dev/)
-* [Pinia](https://pinia.vuejs.org/)
-* [Vue Router](https://router.vuejs.org/)
-* [TypeScript](https://www.typescriptlang.org/)
+- [Vue 3](https://vuejs.org/)
+- [Vite](https://vitejs.dev/)
+- [Pinia](https://pinia.vuejs.org/)
+- [Vue Router](https://router.vuejs.org/)
+- [TypeScript](https://www.typescriptlang.org/)
 
 ---
 
@@ -93,10 +93,10 @@ src/
 
 This project includes different user roles for testing and demonstration purposes:
 
-| Role                 | Email                            | Password     |
-| -------------------- | -------------------------------- | ------------ |
-| Admin                | `admin@email.com`                | `admin`      |
-| Editor               | `editor@email.com`               | `admin`      |
-| Viewer               | `viewer@email.com`               | `admin`      |
-| Viewer Data Mapping  | `viewer_data_mapping@email.com`  | `admin`      |
-| Editor Data Mapping  | `editor_data_mapping@email.com`  | `admin`      |
+| Role                | Email                           | Password |
+| ------------------- | ------------------------------- | -------- |
+| Admin               | `admin@email.com`               | `admin`  |
+| Editor              | `editor@email.com`              | `admin`  |
+| Viewer              | `viewer@email.com`              | `admin`  |
+| Viewer Data Mapping | `viewer_data_mapping@email.com` | `admin`  |
+| Editor Data Mapping | `editor_data_mapping@email.com` | `admin`  |

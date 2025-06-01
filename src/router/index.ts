@@ -58,8 +58,8 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore()
   const required = to.meta.requiredPermission as string | undefined
-  if (!authStore.isHasToken() && to.path !== "/login") {
-    next({ name: "login" })
+  if (!authStore.isHasToken() && to.path !== '/login') {
+    next({ name: 'login' })
     return
   }
   if (required && !authStore.hasPermission(required)) {

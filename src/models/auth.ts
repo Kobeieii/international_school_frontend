@@ -42,6 +42,7 @@ export class Auth {
       permissions: [],
     }
   }
+
   static async me(): Promise<MeData | null> {
     try {
       const response = await axios.get('/auth/me/')

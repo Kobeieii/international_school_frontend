@@ -5,7 +5,7 @@
     </div>
     <div class="my-5">
       <DataMappingTable v-if="selectedBtn === 'edit'" @action="(params) => emit('action', params)" />
-      <Test v-else-if="selectedBtn === 'visualize'" id="visualize"/>
+      <Test v-else-if="selectedBtn === 'visualize'" id="visualize" />
     </div>
   </div>
 </template>

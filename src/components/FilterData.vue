@@ -7,8 +7,8 @@
       </p>
     </div>
     <div class="flex gap-3 ml-auto">
-      <Button label="Reset" variant="text" severity="secondary" size="small" />
-      <Button label="Apply Filter" severity="primary" size="small" />
+      <Button label="Reset" variant="text" severity="secondary" size="small" @click="resetFilter" />
+      <Button label="Apply Filter" severity="primary" size="small" @click="applyFilter" />
     </div>
   </DrawerHeader>
   <DrawerBody>
@@ -17,23 +17,27 @@
         <i class="pi pi-search" />
       </InputGroupAddon>
       <FloatLabel>
-        <InputText id="search" />
+        <InputText id="search" v-model="filterData.search" />
         <label for="search">Search</label>
       </FloatLabel>
     </InputGroup>
 
     <div class="flex flex-col gap-8 my-6">
       <div class="flex flex-col gap-3">
-        <p class="mb-2">Department</p>
+        <p class="mb-2">
+          Department
+        </p>
         <div v-for="department in departments" :key="department.id" class="flex items-center gap-3">
-          <RadioButton v-model="selectDepartment" :input-id="`d-${department.id.toString()}`" :value="department" />
+          <Checkbox v-model="filterData.departments" :input-id="`d-${department.id.toString()}`" :value="department" />
           <label :for="`d-${department.id.toString()}`">{{ department.name }}</label>
         </div>
       </div>
       <div class="flex flex-col gap-3">
-        <p class="mb-2">Data Subject Types</p>
+        <p class="mb-2">
+          Data Subject Types
+        </p>
         <div v-for="subject in dataSubjectTypes" :key="subject.id" class="flex items-center gap-3">
-          <Checkbox v-model="selectDataSubjects" :input-id="`s-${subject.id.toString()}`" :value="subject" />
+          <Checkbox v-model="filterData.dataSubjectTypes" :input-id="`s-${subject.id.toString()}`" :value="subject" />
           <label :for="`s-${subject.id.toString()}`">{{ subject.name }}</label>
         </div>
       </div>
@@ -45,8 +49,20 @@
 import { useDataMappingStore } from '@/stores/dataMapping'
 
 const dataMappingStore = useDataMappingStore()
-const { departments, dataSubjectTypes } = storeToRefs(dataMappingStore)
-const selectDepartment = ref('')
-const selectDataSubjects = ref([])
+const { departments, dataSubjectTypes, filterData } = storeToRefs(dataMappingStore)
 
+function resetFilter() {
+  filterData.value.search = ''
+  filterData.value.departments = []
+  filterData.value.dataSubjectTypes = []
+  dataMappingStore.getTitles({
+    page: 1,
+  })
+}
+
+function applyFilter() {
+  dataMappingStore.getTitles({
+    page: 1,
+  })
+}
 </script>

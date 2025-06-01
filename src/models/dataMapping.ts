@@ -62,10 +62,11 @@ export class Departments {
 export class Titles {
   static async getList(filter: any): Promise<Pagination<TitleData> | null> {
     try {
-    const params: Record<string, any> = {
-      page: filter.page || 1,
-      page_size: filter.page_size || 100,  
-    }
+      const params: Record<string, any> = {
+        page: filter.page || 1,
+        page_size: filter.pageSize || 100,
+        ...filter,
+      }
       const response = await axios.get(`${baseURL}/titles/`, { params })
       return response.data
     }
@@ -90,37 +91,38 @@ export class Titles {
     }
   }
 
-    static async put(id: number, data: {
-        name?: string
-        department_id?: number
-        data_subject_types_ids?: number[]
-    }): Promise<TitleData | null> {
-        try {
-        const response = await axios.patch(`${baseURL}/titles/${id}/`, data)
-        return response.data
-        }
-        catch (error) {
-        console.error('Failed to update title:', error)
-        return null
-        }
+  static async put(id: number, data: {
+    name?: string
+    department_id?: number
+    data_subject_types_ids?: number[]
+  }): Promise<TitleData | null> {
+    try {
+      const response = await axios.patch(`${baseURL}/titles/${id}/`, data)
+      return response.data
     }
+    catch (error) {
+      console.error('Failed to update title:', error)
+      return null
+    }
+  }
 
-    static async delete(id: number): Promise<void> {
-        try {
-            await axios.delete(`${baseURL}/titles/${id}/`)
-        }
-        catch (error) {
-            console.error('Failed to delete title:', error)
-        }
+  static async delete(id: number): Promise<void> {
+    try {
+      await axios.delete(`${baseURL}/titles/${id}/`)
     }
-    static async importExcel(data: TitleExcelData[]): Promise<boolean> {
-        try {
-            await axios.post(`${baseURL}/titles/import/`, data)
-            return true
-        }
-        catch (error) {
-            console.error('Failed to import titles from Excel:', error)
-            return false
-        }
+    catch (error) {
+      console.error('Failed to delete title:', error)
     }
+  }
+
+  static async importExcel(data: TitleExcelData[]): Promise<boolean> {
+    try {
+      await axios.post(`${baseURL}/titles/import/`, data)
+      return true
+    }
+    catch (error) {
+      console.error('Failed to import titles from Excel:', error)
+      return false
+    }
+  }
 }

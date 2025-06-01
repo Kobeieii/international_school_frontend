@@ -10,6 +10,20 @@ export const useDataMappingStore = defineStore('dataMapping', () => {
   const isLoading = reactive({
     titles: false,
   })
+  const pagination = reactive({
+    first: 1,
+    rows: 20,
+  })
+  const pagePagination = computed(() => Math.floor(pagination.first / pagination.rows) + 1)
+  const filterData = reactive<{
+    search: string
+    departments: DepartmentData[]
+    dataSubjectTypes: DataSubjectTypesData[]
+  }>({
+    search: '',
+    departments: [],
+    dataSubjectTypes: [],
+  })
 
   async function getDataSubjectTypes() {
     const result = await DataSubjectTypes.getList()
@@ -25,8 +39,23 @@ export const useDataMappingStore = defineStore('dataMapping', () => {
     }
   }
 
-  async function getTitles(filter: { page: number; page_size: number }) {
+  async function getTitles(
+    data: {
+      page?: number
+      pageSize?: number
+      search?: string
+      departments?: string
+      dataSubjectTypes?: string
+    } = {},
+  ) {
     isLoading.titles = true
+    const filter = {
+      page: data.page || pagePagination.value,
+      page_size: data.pageSize || pagination.rows,
+      search: data.search || filterData.search || '',
+      department__name__in: data.departments || filterData.departments.map(d => d.name).join(','),
+      data_subject_types__name__in: data.dataSubjectTypes || filterData.dataSubjectTypes.map(s => s.name).join(','),
+    }
     const result = await Titles.getList(filter)
     if (result) {
       totalTitles.value = result.total_objects
@@ -35,5 +64,17 @@ export const useDataMappingStore = defineStore('dataMapping', () => {
     isLoading.titles = false
   }
 
-  return { dataSubjectTypes, departments, titles, totalTitles, isLoading, getDataSubjectTypes, getDepartments, getTitles }
+  return {
+    dataSubjectTypes,
+    departments,
+    titles,
+    totalTitles,
+    isLoading,
+    pagination,
+    pagePagination,
+    filterData,
+    getDataSubjectTypes,
+    getDepartments,
+    getTitles,
+  }
 })

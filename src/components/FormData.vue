@@ -58,10 +58,10 @@ import { zodResolver } from '@primevue/forms/resolvers/zod'
 import { z } from 'zod'
 import { useDataMappingStore } from '@/stores/dataMapping'
 
-const dataMappingStore = useDataMappingStore()
-const { dataSubjectTypes, departments } = storeToRefs(dataMappingStore)
 defineProps(['headerName'])
 const emit = defineEmits(['cancel', 'save'])
+const dataMappingStore = useDataMappingStore()
+const { dataSubjectTypes, departments } = storeToRefs(dataMappingStore)
 const formData = reactive({
   title: '',
   description: '',
